@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeCraft AI - Gemini Assistant & Sandbox</title>
-    
-    <!-- Tailwind CSS CDN -->
+    <title>Gemini AI Web App</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -13,1059 +12,1195 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            50: '#f0f5ff',
-                            100: '#e0ebff',
-                            400: '#60a5fa',
+                        gemini: {
+                            50: '#f0f4ff',
+                            100: '#e0e8ff',
                             500: '#3b82f6',
                             600: '#2563eb',
                             700: '#1d4ed8',
-                            900: '#1e3a8a',
+                            900: '#1e293b',
+                            darkBg: '#131314',
+                            darkSidebar: '#1e1e20',
+                            darkCard: '#282a2c',
+                            darkInput: '#1e1e20',
+                            darkHover: '#2f3135'
                         }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                        mono: ['Fira Code', 'Consolas', 'Monaco', 'monospace'],
                     }
                 }
             }
         }
     </script>
-    
-    <!-- FontAwesome Icons & Google Fonts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Prism JS for Code Highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
-
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- MarkedJS for Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Highlight.js for Code Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0b0f19;
-            color: #f8fafc;
-        }
-        .code-font {
-            font-family: 'Fira Code', monospace;
-        }
+        /* Custom scrollbar styling */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #0f172a;
+            background: transparent;
         }
         ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
+            background: rgba(156, 163, 175, 0.4);
+            border-radius: 9999px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
+            background: rgba(156, 163, 175, 0.7);
         }
-        .typing-dot {
-            animation: typing 1.4s infinite ease-in-out both;
+
+        /* Typography markdown custom styles */
+        .prose pre {
+            background-color: #1e1e20 !important;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-top: 0.75rem;
+            margin-bottom: 0.75rem;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .typing-dot:nth-child(1) { animation-delay: 0s; }
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes typing {
-            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-            40% { transform: scale(1); opacity: 1; }
+        .prose code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.9em;
+        }
+        .prose p {
+            margin-bottom: 0.75rem;
+            line-height: 1.7;
+        }
+        .prose p:last-child {
+            margin-bottom: 0;
+        }
+        .prose ul, .prose ol {
+            margin-left: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .prose ul { list-style-type: disc; }
+        .prose ol { list-style-type: decimal; }
+        .prose blockquote {
+            border-left-width: 4px;
+            border-color: #3b82f6;
+            padding-left: 1rem;
+            font-style: italic;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .prose table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .prose th, .prose td {
+            border: 1px solid rgba(156, 163, 175, 0.3);
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+        }
+        .prose th {
+            background-color: rgba(156, 163, 175, 0.1);
+        }
+
+        /* Gradient text for Gemini Sparkle */
+        .gemini-gradient-text {
+            background: linear-gradient(135deg, #4285f4 0%, #9b51e0 50%, #e91e63 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gemini-gradient-bg {
+            background: linear-gradient(135deg, #4285f4 0%, #9b51e0 50%, #d946ef 100%);
+        }
+
+        /* Pulse animation for loading */
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+        .animate-pulse-glow {
+            animation: pulse-glow 1.5s infinite ease-in-out;
+        }
+
+        .drop-active {
+            border-color: #3b82f6 !important;
+            background-color: rgba(59, 130, 246, 0.05) !important;
         }
     </style>
 </head>
-<body class="h-screen flex flex-col overflow-hidden bg-[#090d16] text-slate-100">
+<body class="bg-gray-50 dark:bg-gemini-darkBg text-gray-800 dark:text-gray-100 font-sans h-screen flex overflow-hidden transition-colors duration-200">
 
-    <!-- Header Navigation -->
-    <header class="h-16 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md flex items-center justify-between px-4 lg:px-6 z-20 shrink-0">
-        <div class="flex items-center gap-3">
-            <button id="toggle-sidebar-mobile" onclick="toggleSidebarMobile()" class="lg:hidden p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800">
-                <i class="fa-solid fa-bars text-lg"></i>
+    <!-- Mobile Sidebar Backdrop -->
+    <div id="sidebar-backdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-20 hidden md:hidden transition-opacity"></div>
+
+    <!-- Hidden File Input -->
+    <input type="file" id="file-input" class="hidden" multiple accept="image/*,.txt,.js,.html,.css,.py,.json,.md,.csv,.ts,.jsx,.tsx,.c,.cpp,.java,.sql,.xml,.yaml,.yml" onchange="handleFileSelect(event)">
+
+    <!-- LEFT SIDEBAR -->
+    <aside id="sidebar" class="fixed md:static inset-y-0 left-0 w-72 bg-gray-100 dark:bg-gemini-darkSidebar border-r border-gray-200 dark:border-gray-800 flex flex-col z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out shadow-lg md:shadow-none">
+        
+        <!-- Top Controls / New Chat Button -->
+        <div class="p-3 flex items-center justify-between gap-2">
+            <button onclick="createNewChat()" class="flex-1 flex items-center gap-3 px-4 py-3 rounded-full bg-blue-50 dark:bg-gemini-darkCard hover:bg-blue-100 dark:hover:bg-gemini-darkHover text-blue-600 dark:text-gray-200 text-sm font-medium transition shadow-sm hover:shadow border border-blue-100 dark:border-gray-700">
+                <i class="fa-solid fa-plus text-lg"></i>
+                <span>新しいチャット</span>
             </button>
-            <div class="flex items-center gap-2">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
-                    <i class="fa-solid fa-sparkles text-lg"></i>
-                </div>
-                <span class="font-bold text-xl tracking-wide bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent">
-                    CodeCraft <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-medium tracking-normal ml-1">AI</span>
-                </span>
-            </div>
-        </div>
-
-        <div class="flex items-center gap-3">
-            <!-- Gemini API Key Status / Setup -->
-            <button onclick="openApiKeyModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-indigo-500/30 rounded-xl text-xs font-medium flex items-center gap-1.5 transition cursor-pointer">
-                <i class="fa-solid fa-key text-amber-400"></i>
-                <span id="api-key-btn-text">API Key</span>
-            </button>
-
-            <!-- View Switcher -->
-            <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800 text-sm">
-                <button id="tab-chat-btn" onclick="switchView('chat')" class="px-3 py-1.5 rounded-lg flex items-center gap-2 text-white bg-indigo-600 shadow-md font-medium transition-all">
-                    <i class="fa-solid fa-comments text-xs"></i>
-                    <span>AI Chat</span>
-                </button>
-                <button id="tab-sandbox-btn" onclick="switchView('sandbox')" class="px-3 py-1.5 rounded-lg flex items-center gap-2 text-slate-400 hover:text-slate-200 font-medium transition-all">
-                    <i class="fa-solid fa-play text-xs"></i>
-                    <span>Playground</span>
-                </button>
-            </div>
-
-            <button onclick="clearCurrentChat()" title="チャット履歴を消去" class="p-2 text-slate-400 hover:text-red-400 rounded-lg hover:bg-slate-800 transition-colors">
-                <i class="fa-solid fa-trash-can"></i>
+            <button onclick="toggleSidebar()" class="md:hidden p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500">
+                <i class="fa-solid fa-xmark text-lg"></i>
             </button>
         </div>
-    </header>
 
-    <!-- Main Content Body -->
-    <div class="flex-1 flex overflow-hidden relative">
+        <!-- Chat History Label -->
+        <div class="px-4 py-2 text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider flex justify-between items-center">
+            <span>最近のチャット</span>
+            <span id="chat-count-badge" class="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded-full text-[10px]">0</span>
+        </div>
 
-        <!-- Sidebar (Chat Threads & Management) -->
-        <aside id="sidebar" class="w-72 bg-slate-900/90 border-r border-slate-800/80 flex flex-col justify-between overflow-y-auto transition-all duration-300 absolute inset-y-0 left-0 z-30 lg:static -translate-x-full lg:translate-x-0 backdrop-blur-xl lg:backdrop-blur-none">
-            <div class="p-4 space-y-4">
-                <button onclick="createNewThread()" class="w-full py-2.5 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl font-medium text-sm shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 transition-all cursor-pointer">
-                    <i class="fa-solid fa-plus text-xs"></i>
-                    <span>新しいチャット</span>
+        <!-- Chat List (Scrollable) -->
+        <div id="chat-list" class="flex-1 overflow-y-auto px-2 space-y-1 py-1">
+            <!-- Dynamic Chat Items Render Here -->
+        </div>
+
+        <!-- Bottom Actions (Settings & Theme) -->
+        <div class="p-3 border-t border-gray-200 dark:border-gray-800 flex flex-col gap-1">
+            <button onclick="openSettingsModal()" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-200 dark:hover:bg-gemini-darkHover transition text-gray-700 dark:text-gray-300">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-key text-yellow-500"></i>
+                    <span>APIキー・モデル設定</span>
+                </div>
+                <span id="api-status-badge" class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-500 dark:text-amber-400 border border-amber-500/30">デモ</span>
+            </button>
+
+            <button onclick="toggleTheme()" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-200 dark:hover:bg-gemini-darkHover transition text-gray-700 dark:text-gray-300">
+                <div class="flex items-center gap-3">
+                    <i id="theme-icon" class="fa-solid fa-moon text-indigo-400"></i>
+                    <span id="theme-text">ダークモード</span>
+                </div>
+                <i class="fa-solid fa-circle-half-stroke opacity-50"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CHAT AREA -->
+    <main class="flex-1 flex flex-col h-full relative overflow-hidden bg-white dark:bg-gemini-darkBg">
+
+        <!-- HEADER BAR -->
+        <header class="h-14 px-4 border-b border-gray-200 dark:border-gray-800/80 flex items-center justify-between shrink-0 bg-white/80 dark:bg-gemini-darkBg/80 backdrop-blur z-10">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()" class="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gemini-darkHover transition">
+                    <i class="fa-solid fa-bars text-lg"></i>
                 </button>
-
-                <div class="space-y-2">
-                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center justify-between">
-                        <span><i class="fa-solid fa-comments text-indigo-400 mr-1.5"></i> チャット一覧</span>
-                        <span id="thread-count" class="text-[10px] font-mono bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">0</span>
-                    </h3>
-                    <div id="thread-list" class="space-y-1.5 max-h-[calc(100vh-220px)] overflow-y-auto pr-1">
-                        <!-- Dynamic Thread Items -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="p-3 border-t border-slate-800/80 bg-slate-950/40 text-[11px] text-slate-500 flex items-center justify-between">
-                <span class="flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Gemini Powered
-                </span>
-                <span class="font-mono" id="api-status-badge">Demo Mode</span>
-            </div>
-        </aside>
-
-        <!-- Mobile Overlay -->
-        <div id="mobile-overlay" onclick="toggleSidebarMobile()" class="fixed inset-0 bg-slate-950/80 z-20 hidden lg:hidden backdrop-blur-sm"></div>
-
-        <!-- Chat View Area -->
-        <main id="chat-view" class="flex-1 flex flex-col justify-between overflow-hidden bg-gradient-to-b from-slate-950 via-[#0b0f19] to-[#090d16] relative">
-            
-            <!-- Chat Messages Log Window -->
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 lg:p-6 space-y-6">
-                <!-- Welcome Card -->
-                <div id="welcome-banner" class="max-w-3xl mx-auto my-6 bg-gradient-to-br from-slate-900 via-indigo-950/30 to-slate-900 border border-slate-800 rounded-2xl p-6 lg:p-8 shadow-xl text-center relative overflow-hidden">
-                    <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white text-2xl shadow-lg shadow-indigo-500/20">
-                        <i class="fa-solid fa-robot"></i>
-                    </div>
-                    <h1 class="text-2xl font-bold text-white mb-2">CodeCraft AI にようこそ</h1>
-                    <p class="text-slate-400 text-sm max-w-xl mx-auto mb-6 leading-relaxed">
-                        日常の雑談や計算、質問からプログラミングのコード作成、設計相談、画像の認識・作成まで文脈を理解して何でもお答えします！
-                    </p>
-
-                    <div class="flex flex-wrap gap-3 justify-center max-w-2xl mx-auto">
-                        <button onclick="applyPrompt('こんにちは！今日はどんなことができますか？')" class="text-xs bg-slate-800/90 hover:bg-slate-700 hover:text-indigo-300 text-slate-300 px-4 py-2.5 rounded-xl border border-slate-700/60 transition flex items-center gap-2 cursor-pointer shadow-sm">
-                            💬 日常の会話・雑談
-                        </button>
-                        <button onclick="applyPrompt('Webサイト用のスタイリッシュなボタンのHTML/CSSコードを作って')" class="text-xs bg-slate-800/90 hover:bg-slate-700 hover:text-indigo-300 text-slate-300 px-4 py-2.5 rounded-xl border border-slate-700/60 transition flex items-center gap-2 cursor-pointer shadow-sm">
-                            💻 プログラミング・コード作成
-                        </button>
-                        <button onclick="applyPrompt('ネオンカラーに輝く未来都市のアイコン画像を生成して')" class="text-xs bg-slate-800/90 hover:bg-slate-700 hover:text-indigo-300 text-slate-300 px-4 py-2.5 rounded-xl border border-slate-700/60 transition flex items-center gap-2 cursor-pointer shadow-sm">
-                            🎨 AI画像生成
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Messages Input Container Bar -->
-            <div class="p-3 lg:p-4 border-t border-slate-800/80 bg-slate-900/80 backdrop-blur-md shrink-0">
-                <!-- Media / Files Preview Container -->
-                <div id="media-preview-bar" class="hidden flex gap-2 mb-2 overflow-x-auto pb-1"></div>
-
-                <form onsubmit="handleGenerate(event)" class="max-w-4xl mx-auto relative flex items-center gap-2">
-                    <input type="file" id="file-input" multiple onchange="handleFileSelect(event)" class="hidden">
-                    
-                    <button type="button" onclick="document.getElementById('file-input').click()" title="ファイルや画像を添付" class="p-3 text-slate-400 hover:text-indigo-400 bg-slate-950/80 hover:bg-slate-800 border border-slate-800 rounded-xl transition cursor-pointer shrink-0">
-                        <i class="fa-solid fa-plus text-base"></i>
-                    </button>
-
-                    <div class="relative flex-1">
-                        <textarea id="prompt-input" rows="1" placeholder="CodeCraft AIにメッセージを送信... (Shift+Enterで改行)" class="w-full pl-4 pr-14 py-3 bg-slate-950/90 border border-slate-800 rounded-xl focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm text-slate-100 placeholder-slate-500 resize-none max-h-32 block"></textarea>
-                        <span id="prompt-char-count" class="absolute right-3 bottom-2 text-[10px] text-slate-600 font-mono">0 文字</span>
-                    </div>
-
-                    <button type="submit" id="send-btn" class="p-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-600/30 transition cursor-pointer shrink-0 flex items-center justify-center">
-                        <i class="fa-solid fa-paper-plane text-sm"></i>
-                    </button>
-                </form>
-            </div>
-        </main>
-
-        <!-- Sandbox / Playground View Area -->
-        <main id="sandbox-view" class="hidden flex-1 flex flex-col lg:flex-row overflow-hidden bg-slate-950">
-            <!-- Left Sandbox Editor Panel -->
-            <div class="flex-1 flex flex-col border-r border-slate-800 overflow-hidden">
-                <div class="h-12 bg-slate-900/90 px-4 border-b border-slate-800 flex items-center justify-between shrink-0">
-                    <div class="flex items-center gap-3">
-                        <button onclick="switchView('chat')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium flex items-center gap-1.5 transition">
-                            <i class="fa-solid fa-arrow-left"></i> チャットへ戻る
-                        </button>
-                        <span class="text-xs font-semibold text-slate-300">Playground Editor</span>
-                    </div>
-
-                    <div class="flex items-center gap-2">
-                        <button onclick="runSandboxCode()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-medium flex items-center gap-1 shadow-md transition">
-                            <i class="fa-solid fa-play text-[10px]"></i> 実行
-                        </button>
-                        <button onclick="resetSandbox()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-lg text-xs transition">
-                            リセット
-                        </button>
-                    </div>
-                </div>
-
-                <textarea id="sandbox-editor" class="flex-1 w-full bg-[#0d1117] text-slate-200 code-font p-4 text-xs focus:outline-none resize-none leading-relaxed" placeholder="HTML, CSS, JS コードを入力..."></textarea>
-            </div>
-
-            <!-- Right Sandbox Live Preview & AI Side Drawer -->
-            <div class="w-full lg:w-1/2 flex flex-col border-t lg:border-t-0 border-slate-800 overflow-hidden relative">
-                <div class="h-12 bg-slate-900/90 px-4 border-b border-slate-800 flex items-center justify-between shrink-0">
-                    <span class="text-xs font-semibold text-slate-300 flex items-center gap-2">
-                        <i class="fa-solid fa-desktop text-indigo-400"></i> プレビュー画面
+                <div class="flex items-center gap-2">
+                    <span class="font-bold text-lg tracking-tight flex items-center gap-1.5">
+                        <i class="fa-solid fa-sparkles gemini-gradient-text text-xl"></i>
+                        <span class="gemini-gradient-text font-extrabold">Gemini</span>
                     </span>
-                    <button onclick="toggleSideChat()" class="px-2.5 py-1 bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 border border-indigo-500/40 rounded-lg text-xs font-medium flex items-center gap-1.5 transition">
-                        <i class="fa-solid fa-robot"></i> <span id="side-chat-btn-text">AIチャットを表示</span>
-                    </button>
-                </div>
-
-                <div class="flex-1 relative bg-white">
-                    <iframe id="sandbox-iframe" class="w-full h-full border-0"></iframe>
-
-                    <!-- Side AI Drawer -->
-                    <div id="side-chat-panel" class="absolute inset-y-0 right-0 w-80 bg-slate-900/95 border-l border-slate-800 shadow-2xl transition-transform duration-300 transform translate-x-full flex flex-col backdrop-blur-xl">
-                        <div class="p-3 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
-                            <span class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-                                <i class="fa-solid fa-robot text-indigo-400"></i> Playground Helper
-                            </span>
-                            <button onclick="toggleSideChat()" class="text-slate-400 hover:text-white p-1">
-                                <i class="fa-solid fa-xmark"></i>
-                            </button>
-                        </div>
-                        <div id="side-chat-messages" class="flex-1 p-3 overflow-y-auto space-y-3 text-xs">
-                            <div class="bg-slate-800/80 p-2.5 rounded-xl text-slate-300">
-                                プレビュー中のコードについて相談してください！修正案やデザインのアドバイスをします。
-                            </div>
-                        </div>
-                        <div class="p-2 border-t border-slate-800 bg-slate-950/80">
-                            <input type="text" id="side-chat-input" onkeydown="if(event.key==='Enter') sendSideChatMessage()" placeholder="コードの質問や相談..." class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
-                        </div>
-                    </div>
+                    <span id="header-model-badge" class="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700">gemini-2.5-flash</span>
                 </div>
             </div>
-        </main>
-    </div>
 
-    <!-- API Key Setting Modal -->
-    <div id="api-key-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4">
-            <div class="flex items-center justify-between">
-                <h3 class="text-base font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-key text-amber-400"></i> Gemini APIキーの設定
-                </h3>
-                <button onclick="closeApiKeyModal()" class="text-slate-400 hover:text-white">
-                    <i class="fa-solid fa-xmark"></i>
+            <!-- Header Quick Controls -->
+            <div class="flex items-center gap-2">
+                <button onclick="clearCurrentChatMessages()" title="表示中のメッセージをクリア" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gemini-darkHover text-gray-500 transition">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </button>
+                <button onclick="openSettingsModal()" title="設定" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gemini-darkHover text-gray-500 transition">
+                    <i class="fa-solid fa-gear"></i>
                 </button>
             </div>
-            <p class="text-xs text-slate-400 leading-relaxed">
-                Google AI Studioで取得したGemini APIキーを入力してください。
-            </p>
-            <input type="password" id="api-key-input" placeholder="AQ.Ab8RN6..." class="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 font-mono focus:outline-none focus:border-indigo-500">
-            <div class="flex items-center justify-end gap-2 pt-2">
-                <button onclick="closeApiKeyModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-xl transition">キャンセル</button>
-                <button onclick="saveApiKey()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs rounded-xl font-medium transition shadow-lg shadow-indigo-600/30">保存する</button>
+        </header>
+
+        <!-- CHAT CONTENT CONTAINER -->
+        <div id="chat-container" class="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 max-w-4xl w-full mx-auto pb-44">
+            
+            <!-- WELCOME SCREEN -->
+            <div id="welcome-screen" class="h-full flex flex-col justify-center items-center text-center px-4 py-8 max-w-2xl mx-auto my-auto space-y-8">
+                <div class="space-y-3">
+                    <div class="w-16 h-16 mx-auto rounded-2xl gemini-gradient-bg flex items-center justify-center shadow-lg shadow-blue-500/20">
+                        <i class="fa-solid fa-sparkles text-3xl text-white"></i>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-extrabold gemini-gradient-text">こんにちは、何かお手伝いできますか？</h1>
+                    <p class="text-sm md:text-base text-gray-500 dark:text-gray-400">画像やファイルを送信して分析したり、前後の文脈を汲んだ継続的な会話が可能です。</p>
+                </div>
+
+                <!-- Suggested Prompt Chips -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full text-left">
+                    <button onclick="usePromptTemplate('PythonでWebサーバーを立ち上げるコードを書いて')" class="p-4 rounded-2xl bg-gray-50 dark:bg-gemini-darkCard hover:bg-gray-100 dark:hover:bg-gemini-darkHover border border-gray-200 dark:border-gray-700/60 transition group flex flex-col justify-between">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">コード生成</span>
+                            <i class="fa-solid fa-code text-blue-500 group-hover:scale-110 transition-transform"></i>
+                        </div>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">「PythonでWebサーバーのコードを書いて」</span>
+                    </button>
+
+                    <button onclick="usePromptTemplate('「ここを直して」と指示したら直前のコードを書き換えて')" class="p-4 rounded-2xl bg-gray-50 dark:bg-gemini-darkCard hover:bg-gray-100 dark:hover:bg-gemini-darkHover border border-gray-200 dark:border-gray-700/60 transition group flex flex-col justify-between">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">文脈の理解</span>
+                            <i class="fa-solid fa-comments text-amber-500 group-hover:scale-110 transition-transform"></i>
+                        </div>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">「ここを直して」等の指示で直前のコードや会話を修正</span>
+                    </button>
+
+                    <button onclick="usePromptTemplate('添付した写真やソースコードファイルの内容を説明して')" class="p-4 rounded-2xl bg-gray-50 dark:bg-gemini-darkCard hover:bg-gray-100 dark:hover:bg-gemini-darkHover border border-gray-200 dark:border-gray-700/60 transition group flex flex-col justify-between">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">画像・ファイル解析</span>
+                            <i class="fa-solid fa-paperclip text-emerald-500 group-hover:scale-110 transition-transform"></i>
+                        </div>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">+ボタンから画像やテキストファイルを送って解析</span>
+                    </button>
+
+                    <button onclick="usePromptTemplate('量子コンピュータの基本的な仕組みを小学生にもわかるように説明して')" class="p-4 rounded-2xl bg-gray-50 dark:bg-gemini-darkCard hover:bg-gray-100 dark:hover:bg-gemini-darkHover border border-gray-200 dark:border-gray-700/60 transition group flex flex-col justify-between">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">概念の解説</span>
+                            <i class="fa-solid fa-graduation-cap text-purple-500 group-hover:scale-110 transition-transform"></i>
+                        </div>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">量子コンピュータの仕組みをわかりやすく解説</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- MESSAGE HISTORY CONTAINER -->
+            <div id="messages-list" class="space-y-6 hidden">
+                <!-- Messages appended dynamically -->
+            </div>
+
+        </div>
+
+        <!-- FLOATING INPUT AREA -->
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white via-white/95 to-transparent dark:from-gemini-darkBg dark:via-gemini-darkBg/95 dark:to-transparent z-10">
+            <div class="max-w-3xl mx-auto space-y-2">
+                
+                <!-- Input Box Container (Supports Drag & Drop) -->
+                <div id="input-box-container" class="relative bg-gray-100 dark:bg-gemini-darkCard rounded-3xl border border-gray-200 dark:border-gray-700 shadow-lg focus-within:border-blue-500 dark:focus-within:border-blue-500 transition-all overflow-hidden flex flex-col">
+                    
+                    <!-- ATTACHMENTS PREVIEW AREA -->
+                    <div id="attachments-preview" class="hidden px-4 pt-3 flex flex-wrap gap-2.5 max-h-36 overflow-y-auto">
+                        <!-- Dynamic Attachment Chips/Thumbnails -->
+                    </div>
+
+                    <div class="flex items-end px-3 py-2 gap-2">
+                        <!-- PLUS (+) ATTACHMENT BUTTON -->
+                        <button type="button" onclick="triggerFileSelect()" title="画像やファイルを添付" class="w-10 h-10 rounded-full flex items-center justify-center text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 hover:bg-gray-200 dark:hover:bg-gemini-darkHover transition shrink-0 mb-1">
+                            <i class="fa-solid fa-plus text-lg"></i>
+                        </button>
+
+                        <!-- TEXTAREA -->
+                        <textarea id="user-input" rows="1" placeholder="メッセージを入力、または画像・ファイルを添付/貼り付け..." class="flex-1 py-2.5 bg-transparent resize-none border-none focus:outline-none focus:ring-0 max-h-48 text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-sm md:text-base leading-relaxed" onkeydown="handleKeyDown(event)" oninput="autoResizeTextarea(this)"></textarea>
+
+                        <!-- SEND BUTTON -->
+                        <button id="send-btn" onclick="submitMessage()" class="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center transition disabled:opacity-40 disabled:cursor-not-allowed shadow-md shrink-0 mb-1">
+                            <i class="fa-solid fa-paper-plane text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Footer disclaimer & Demo notification -->
+                <div class="flex justify-between items-center px-3 text-[11px] text-gray-400 dark:text-gray-500">
+                    <span>Gemini は不正確な情報を表示することがあります。回答を再確認してください。</span>
+                    <span id="demo-mode-indicator" class="text-amber-500 hidden"><i class="fa-solid fa-circle-info mr-1"></i>デモモード動作中</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- SETTINGS MODAL -->
+    <div id="settings-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-gemini-darkCard w-full max-w-md rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden transform transition-all">
+            
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                <h3 class="text-lg font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-blue-500"></i>
+                    <span>設定</span>
+                </h3>
+                <button onclick="closeSettingsModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 rounded-lg">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-5">
+                <!-- API Key Input -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        Gemini API キー
+                    </label>
+                    <div class="relative">
+                        <input type="password" id="api-key-input" placeholder="AIzaSy..." class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gemini-darkInput text-gray-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button type="button" onclick="toggleApiKeyVisibility()" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                            <i id="eye-icon" class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                        APIキーはブラウザの <code class="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-blue-500">localStorage</code> に安全に保持されます。<br>
+                        未入力時はデモモードで動作します。
+                        <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-500 underline hover:text-blue-600">Google AI Studioで作成 ↗</a>
+                    </p>
+                </div>
+
+                <!-- Model Selector -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        使用モデル
+                    </label>
+                    <select id="model-select" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gemini-darkInput text-gray-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="gemini-2.5-flash">gemini-2.5-flash (高速・標準・マルチモーダル)</option>
+                        <option value="gemini-2.5-pro">gemini-2.5-pro (高精度・高度な推論)</option>
+                        <option value="gemini-1.5-flash">gemini-1.5-flash (旧標準モデル)</option>
+                    </select>
+                </div>
+
+                <!-- System Instruction -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        システムプロンプト (任意)
+                    </label>
+                    <textarea id="system-instruction-input" rows="3" placeholder="例: あなたは優秀なプログラミングアシスタントです。過去の会話や提供されたコードの文脈を常に保持し、「ここを直して」といった曖昧な指示にも正確に対応してください。" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gemini-darkInput text-gray-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+                </div>
+            </div>
+
+            <div class="px-6 py-4 bg-gray-50 dark:bg-gemini-darkSidebar flex justify-end gap-3">
+                <button onclick="closeSettingsModal()" class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                    キャンセル
+                </button>
+                <button onclick="saveSettings()" class="px-5 py-2 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition shadow-md">
+                    保存する
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification Component -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-indigo-600 text-white px-4 py-2.5 rounded-xl shadow-xl text-xs font-medium transform translate-y-20 opacity-0 transition-all duration-300 z-50 pointer-events-none flex items-center gap-2">
-        <i class="fa-solid fa-circle-check"></i>
-        <span id="toast-message">操作を完了しました</span>
+    <!-- RENAME CHAT MODAL -->
+    <div id="rename-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-gemini-darkCard w-full max-w-sm rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 p-6 space-y-4">
+            <h3 class="text-base font-bold text-gray-800 dark:text-gray-100">チャット名の変更</h3>
+            <input type="text" id="rename-input" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gemini-darkInput text-gray-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeRenameModal()" class="px-4 py-2 rounded-xl text-xs font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700">キャンセル</button>
+                <button onclick="confirmRenameChat()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white">更新</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Core App Logic -->
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed top-5 right-5 z-50 transform translate-y-[-100px] opacity-0 transition-all duration-300 bg-gray-900 text-white dark:bg-white dark:text-gray-900 px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 text-sm font-medium pointer-events-none">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 dark:text-emerald-600"></i>
+        <span id="toast-message">設定を保存しました</span>
+    </div>
+
+
+    <!-- MAIN JAVASCRIPT LOGIC -->
     <script>
-        let appState = {
-            apiKey: '',
-            threads: [],
-            activeThreadId: null,
-            attachedMedia: []
+        // --- STATE MANAGEMENT ---
+        const STORAGE_KEY_CHATS = 'gemini_app_chats_v2';
+        const STORAGE_KEY_SETTINGS = 'gemini_app_settings_v2';
+
+        const DEFAULT_SYSTEM_INSTRUCTION = 
+            "あなたはGoogleが開発した高度なAIアシスタント「Gemini」です。" +
+            "対話履歴全体（これまでの会話、提示されたコード、ユーザーの要望、添付画像・ファイルの内容）を常に正確に記憶・把握し、高度にかみ合った一貫性のある対話を行ってください。" +
+            "ユーザーが「ここを直して」「色を変えて」「エラーを修正して」といった文脈依存の指示を出した場合、直前に生成したコードや議論していたトピックを自発的に特定し、該当部分を適切に修正・回答してください。";
+
+        let state = {
+            chats: [],
+            activeChatId: null,
+            pendingAttachments: [], // [{ id, type: 'image'|'file', name, mimeType, data (base64 or text) }]
+            settings: {
+                apiKey: '',
+                model: 'gemini-2.5-flash',
+                systemInstruction: DEFAULT_SYSTEM_INSTRUCTION,
+                theme: 'dark'
+            },
+            isGenerating: false,
+            renameTargetId: null
         };
 
-        let promptInput, promptCharCount, chatMessages, threadList, sandboxEditor;
-
-        window.addEventListener('DOMContentLoaded', () => {
-            promptInput = document.getElementById('prompt-input');
-            promptCharCount = document.getElementById('prompt-char-count');
-            chatMessages = document.getElementById('chat-messages');
-            threadList = document.getElementById('thread-list');
-            sandboxEditor = document.getElementById('sandbox-editor');
-
-            if (promptInput) {
-                promptInput.addEventListener('input', (e) => {
-                    promptCharCount.innerText = `${e.target.value.length} 文字`;
-                });
-
-                promptInput.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        handleGenerate(e);
-                    }
-                });
-            }
-
-            // Global paste support for images
-            document.addEventListener('paste', (e) => {
-                const items = e.clipboardData?.items;
-                if (!items) return;
-                for (let item of items) {
-                    if (item.type.indexOf('image') !== -1) {
-                        const file = item.getAsFile();
-                        processImageFile(file);
-                    }
-                }
-            });
-
-            loadApiKeyFromStorage();
-            loadThreadsFromStorage();
-
-            if (appState.threads.length === 0) {
-                createNewThread();
-            } else {
-                switchThread(appState.threads[0].id);
-            }
+        // Configure Marked.js
+        marked.setOptions({
+            highlight: function(code, lang) {
+                const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+                return hljs.highlight(code, { language }).value;
+            },
+            breaks: true
         });
 
-        // Key Storage
-        function loadApiKeyFromStorage() {
-            const key = localStorage.getItem('codecraft_api_key');
-            if (key) {
-                appState.apiKey = key;
-                document.getElementById('api-key-btn-text').innerText = "Key 設定済";
-                document.getElementById('api-status-badge').innerText = "Gemini Connected";
-                document.getElementById('api-status-badge').className = "font-mono text-emerald-400 font-medium";
+        // --- INITIALIZATION ---
+        window.onload = function() {
+            loadSettings();
+            loadChats();
+            applyTheme();
+            setupDragAndDrop();
+            setupPasteHandler();
+
+            if (state.chats.length === 0) {
+                createNewChat(false);
             } else {
-                document.getElementById('api-key-btn-text').innerText = "API Key";
-                document.getElementById('api-status-badge').innerText = "Demo Mode";
-                document.getElementById('api-status-badge').className = "font-mono text-slate-500";
+                if (!state.activeChatId || !state.chats.find(c => c.id === state.activeChatId)) {
+                    state.activeChatId = state.chats[0].id;
+                }
+            }
+
+            renderSidebar();
+            renderActiveChat();
+            updateHeaderBadge();
+        };
+
+        // --- STORAGE FUNCTIONS ---
+        function loadSettings() {
+            const saved = localStorage.getItem(STORAGE_KEY_SETTINGS);
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    state.settings = { ...state.settings, ...parsed };
+                } catch (e) {
+                    console.error('Failed to parse settings', e);
+                }
+            }
+            // Sync setting controls
+            document.getElementById('api-key-input').value = state.settings.apiKey || '';
+            document.getElementById('model-select').value = state.settings.model || 'gemini-2.5-flash';
+            document.getElementById('system-instruction-input').value = state.settings.systemInstruction || DEFAULT_SYSTEM_INSTRUCTION;
+            updateApiStatusBadge();
+        }
+
+        function saveSettingsToStorage() {
+            localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(state.settings));
+            updateApiStatusBadge();
+            updateHeaderBadge();
+        }
+
+        function loadChats() {
+            const saved = localStorage.getItem(STORAGE_KEY_CHATS);
+            if (saved) {
+                try {
+                    state.chats = JSON.parse(saved);
+                } catch (e) {
+                    console.error('Failed to parse chats', e);
+                    state.chats = [];
+                }
             }
         }
 
-        function openApiKeyModal() {
-            document.getElementById('api-key-modal').classList.remove('hidden');
-            document.getElementById('api-key-input').value = appState.apiKey || '';
-        }
-
-        function closeApiKeyModal() {
-            document.getElementById('api-key-modal').classList.add('hidden');
-        }
-
-        function saveApiKey() {
-            const key = document.getElementById('api-key-input').value.trim();
-            appState.apiKey = key;
-            if (key) {
-                localStorage.setItem('codecraft_api_key', key);
-            } else {
-                localStorage.removeItem('codecraft_api_key');
+        function saveChatsToStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEY_CHATS, JSON.stringify(state.chats));
+            } catch(e) {
+                console.warn('LocalStorage quota exceeded or save error:', e);
             }
-            closeApiKeyModal();
-            loadApiKeyFromStorage();
-            showToast(key ? "APIキーを保存しました" : "デモモードに切り替えました");
         }
 
-        // Thread Operations
-        function createNewThread() {
-            const newId = 'thread_' + Date.now();
-            const newThread = {
-                id: newId,
-                title: '新しい会話',
+        // --- THEME MANAGEMENT ---
+        function applyTheme() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+
+            if (state.settings.theme === 'dark') {
+                html.classList.add('dark');
+                themeIcon.className = 'fa-solid fa-moon text-indigo-400';
+                themeText.textContent = 'ダークモード';
+            } else {
+                html.classList.remove('dark');
+                themeIcon.className = 'fa-solid fa-sun text-amber-500';
+                themeText.textContent = 'ライトモード';
+            }
+        }
+
+        function toggleTheme() {
+            state.settings.theme = state.settings.theme === 'dark' ? 'light' : 'dark';
+            applyTheme();
+            saveSettingsToStorage();
+        }
+
+        // --- SIDEBAR & CHAT MANAGEMENT ---
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            sidebar.classList.toggle('-translate-x-full');
+            backdrop.classList.toggle('hidden');
+        }
+
+        function createNewChat(switchChat = true) {
+            const newChat = {
+                id: 'chat_' + Date.now(),
+                title: '新しいチャット',
                 createdAt: new Date().toISOString(),
                 messages: []
             };
-            appState.threads.unshift(newThread);
-            appState.activeThreadId = newId;
-            saveThreadsToStorage();
-            renderThreads();
-            renderActiveThreadMessages();
+            state.chats.unshift(newChat);
+            if (switchChat) {
+                state.activeChatId = newChat.id;
+            }
+            saveChatsToStorage();
+            renderSidebar();
+            if (switchChat) {
+                renderActiveChat();
+            }
+            if (window.innerWidth < 768) {
+                const sidebar = document.getElementById('sidebar');
+                const backdrop = document.getElementById('sidebar-backdrop');
+                sidebar.classList.add('-translate-x-full');
+                backdrop.classList.add('hidden');
+            }
         }
 
-        function switchThread(threadId) {
-            appState.activeThreadId = threadId;
-            renderThreads();
-            renderActiveThreadMessages();
+        function selectChat(id) {
+            state.activeChatId = id;
+            renderSidebar();
+            renderActiveChat();
+            if (window.innerWidth < 768) {
+                toggleSidebar();
+            }
         }
 
-        function deleteThread(threadId, e) {
-            if (e) e.stopPropagation();
-            appState.threads = appState.threads.filter(t => t.id !== threadId);
-            if (appState.threads.length === 0) {
-                createNewThread();
-            } else {
-                if (appState.activeThreadId === threadId) {
-                    appState.activeThreadId = appState.threads[0].id;
+        function openRenameModal(id, currentTitle, event) {
+            if (event) event.stopPropagation();
+            state.renameTargetId = id;
+            document.getElementById('rename-input').value = currentTitle;
+            document.getElementById('rename-modal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('rename-input').focus(), 50);
+        }
+
+        function closeRenameModal() {
+            document.getElementById('rename-modal').classList.add('hidden');
+            state.renameTargetId = null;
+        }
+
+        function confirmRenameChat() {
+            const newTitle = document.getElementById('rename-input').value.trim();
+            if (newTitle && state.renameTargetId) {
+                const chat = state.chats.find(c => c.id === state.renameTargetId);
+                if (chat) {
+                    chat.title = newTitle;
+                    saveChatsToStorage();
+                    renderSidebar();
                 }
-                saveThreadsToStorage();
-                renderThreads();
-                renderActiveThreadMessages();
             }
-            showToast("スレッドを削除しました");
+            closeRenameModal();
+            showToast('チャット名を更新しました');
         }
 
-        function editThreadTitle(threadId, e) {
-            if (e) e.stopPropagation();
-            const thread = appState.threads.find(t => t.id === threadId);
-            if (!thread) return;
-            const newTitle = prompt("チャット名を入力してください:", thread.title);
-            if (newTitle && newTitle.trim()) {
-                thread.title = newTitle.trim();
-                saveThreadsToStorage();
-                renderThreads();
+        function deleteChat(id, event) {
+            if (event) event.stopPropagation();
+            state.chats = state.chats.filter(c => c.id !== id);
+            if (state.activeChatId === id) {
+                state.activeChatId = state.chats.length > 0 ? state.chats[0].id : null;
             }
+            if (state.chats.length === 0) {
+                createNewChat(false);
+            }
+            saveChatsToStorage();
+            renderSidebar();
+            renderActiveChat();
+            showToast('チャットを削除しました');
         }
 
-        function renderThreads() {
-            if (!threadList) return;
-            threadList.innerHTML = '';
-            document.getElementById('thread-count').innerText = appState.threads.length;
+        function renderSidebar() {
+            const listEl = document.getElementById('chat-list');
+            const badgeEl = document.getElementById('chat-count-badge');
+            badgeEl.textContent = state.chats.length;
 
-            appState.threads.forEach(t => {
-                const isActive = t.id === appState.activeThreadId;
+            listEl.innerHTML = '';
+            state.chats.forEach(chat => {
+                const isActive = chat.id === state.activeChatId;
                 const div = document.createElement('div');
-                div.className = `group flex items-center justify-between p-2.5 rounded-xl cursor-pointer text-xs transition ${
-                    isActive ? 'bg-indigo-600/20 text-white border border-indigo-500/40 font-medium' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+                div.className = `group flex items-center justify-between px-3 py-2.5 rounded-xl cursor-pointer text-sm transition ${
+                    isActive 
+                    ? 'bg-blue-100/70 dark:bg-gemini-darkHover text-blue-600 dark:text-blue-400 font-semibold' 
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200/60 dark:hover:bg-gemini-darkHover'
                 }`;
-                div.onclick = () => switchThread(t.id);
+                div.onclick = () => selectChat(chat.id);
 
                 div.innerHTML = `
-                    <div class="flex items-center gap-2 truncate pr-2">
-                        <i class="fa-solid fa-message ${isActive ? 'text-indigo-400' : 'text-slate-500'} text-[11px]"></i>
-                        <span class="truncate">${escapeHTML(t.title)}</span>
+                    <div class="flex items-center gap-2.5 overflow-hidden">
+                        <i class="fa-regular fa-message text-xs opacity-70"></i>
+                        <span class="truncate max-w-[150px]">${escapeHtml(chat.title)}</span>
                     </div>
-                    <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
-                        <button onclick="editThreadTitle('${t.id}', event)" title="名前変更" class="p-1 text-slate-400 hover:text-white">
-                            <i class="fa-solid fa-pen text-[10px]"></i>
+                    <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onclick="openRenameModal('${chat.id}', '${escapeHtml(chat.title).replace(/'/g, "\\'")}', event)" class="p-1 hover:text-blue-500 rounded text-xs" title="名前の変更">
+                            <i class="fa-solid fa-pen"></i>
                         </button>
-                        <button onclick="deleteThread('${t.id}', event)" title="削除" class="p-1 text-slate-400 hover:text-red-400">
-                            <i class="fa-solid fa-trash-can text-[10px]"></i>
+                        <button onclick="deleteChat('${chat.id}', event)" class="p-1 hover:text-red-500 rounded text-xs" title="削除">
+                            <i class="fa-solid fa-trash-can"></i>
                         </button>
                     </div>
                 `;
-                threadList.appendChild(div);
+                listEl.appendChild(div);
             });
         }
 
-        function getActiveThread() {
-            return appState.threads.find(t => t.id === appState.activeThreadId);
-        }
-
-        function renderActiveThreadMessages() {
-            if (!chatMessages) return;
-            chatMessages.innerHTML = '';
-            const activeThread = getActiveThread();
-
-            if (!activeThread || activeThread.messages.length === 0) {
-                document.getElementById('welcome-banner')?.classList.remove('hidden');
-                return;
-            }
-
-            document.getElementById('welcome-banner')?.classList.add('hidden');
-            activeThread.messages.forEach(msg => {
-                if (msg.role === 'user') {
-                    appendUserMessageUI(msg.text, msg.media);
-                } else if (msg.role === 'ai') {
-                    renderAIFormattedMessage(msg.text, false);
-                }
-            });
-            scrollToBottom();
-        }
-
-        // Prompts & View Operations
-        function applyPrompt(promptText) {
-            if (promptInput) {
-                promptInput.value = promptText;
-                promptCharCount.innerText = `${promptText.length} 文字`;
-                promptInput.focus();
-            }
-        }
-
-        function switchView(viewName) {
-            const chatView = document.getElementById('chat-view');
-            const sandboxView = document.getElementById('sandbox-view');
-            const chatBtn = document.getElementById('tab-chat-btn');
-            const sandboxBtn = document.getElementById('tab-sandbox-btn');
-
-            if (viewName === 'chat') {
-                chatView.classList.remove('hidden');
-                sandboxView.classList.add('hidden');
-                chatBtn.className = "px-3 py-1.5 rounded-lg flex items-center gap-2 text-white bg-indigo-600 shadow-md font-medium transition-all";
-                sandboxBtn.className = "px-3 py-1.5 rounded-lg flex items-center gap-2 text-slate-400 hover:text-slate-200 font-medium transition-all";
-            } else {
-                chatView.classList.add('hidden');
-                sandboxView.classList.remove('hidden');
-                sandboxBtn.className = "px-3 py-1.5 rounded-lg flex items-center gap-2 text-white bg-indigo-600 shadow-md font-medium transition-all";
-                chatBtn.className = "px-3 py-1.5 rounded-lg flex items-center gap-2 text-slate-400 hover:text-slate-200 font-medium transition-all";
-                runSandboxCode();
-            }
-        }
-
-        function toggleSidebarMobile() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('mobile-overlay');
-            sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
-        }
-
-        function toggleSideChat() {
-            const panel = document.getElementById('side-chat-panel');
-            const btnText = document.getElementById('side-chat-btn-text');
-            if (panel.classList.contains('translate-x-full')) {
-                panel.classList.remove('translate-x-full');
-                if (btnText) btnText.innerText = "チャットを隠す";
-            } else {
-                panel.classList.add('translate-x-full');
-                if (btnText) btnText.innerText = "AIチャットを表示";
-            }
-        }
-
-        function sendSideChatMessage() {
-            const input = document.getElementById('side-chat-input');
-            const text = input.value.trim();
-            if (!text) return;
-            const container = document.getElementById('side-chat-messages');
-
-            const userDiv = document.createElement('div');
-            userDiv.className = "bg-indigo-600 text-white p-2.5 rounded-xl ml-4 leading-relaxed";
-            userDiv.innerText = text;
-            container.appendChild(userDiv);
-
-            input.value = '';
-            container.scrollTop = container.scrollHeight;
-
-            setTimeout(() => {
-                const aiDiv = document.createElement('div');
-                aiDiv.className = "bg-slate-800 text-slate-200 p-2.5 rounded-xl mr-4 leading-relaxed";
-                aiDiv.innerText = `プレビュー中のコードについて「${text}」ですね！コードの調整案をお伝えします。`;
-                container.appendChild(aiDiv);
-                container.scrollTop = container.scrollHeight;
-            }, 600);
+        // --- ATTACHMENTS & FILE HANDLING ---
+        function triggerFileSelect() {
+            document.getElementById('file-input').click();
         }
 
         function handleFileSelect(e) {
-            const files = e.target.files;
-            if (!files) return;
-            for (let f of files) {
-                if (f.type.startsWith('image/')) {
-                    processImageFile(f);
-                } else if (f.type.startsWith('video/')) {
-                    const reader = new FileReader();
-                    reader.onload = (ev) => {
-                        appState.attachedMedia.push({ type: 'video', data: ev.target.result, name: f.name });
-                        renderMediaPreviews();
-                    };
-                    reader.readAsDataURL(f);
-                } else {
-                    const reader = new FileReader();
-                    reader.onload = (ev) => {
-                        appState.attachedMedia.push({ type: 'file', data: ev.target.result, name: f.name });
-                        renderMediaPreviews();
-                    };
-                    reader.readAsText(f);
+            const files = Array.from(e.target.files || []);
+            processFiles(files);
+            e.target.value = ''; // Reset input
+        }
+
+        function setupDragAndDrop() {
+            const container = document.getElementById('input-box-container');
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                container.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    container.classList.add('drop-active');
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                container.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    container.classList.remove('drop-active');
+                }, false);
+            });
+
+            container.addEventListener('drop', (e) => {
+                const files = Array.from(e.dataTransfer.files || []);
+                processFiles(files);
+            }, false);
+        }
+
+        function setupPasteHandler() {
+            document.addEventListener('paste', (e) => {
+                const items = Array.from(e.clipboardData?.items || []);
+                const files = [];
+                for (const item of items) {
+                    if (item.kind === 'file') {
+                        const file = item.getAsFile();
+                        if (file) files.push(file);
+                    }
                 }
-            }
-        }
-
-        function processImageFile(file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                appState.attachedMedia.push({ type: 'image', data: event.target.result, mimeType: file.type });
-                renderMediaPreviews();
-                showToast("画像を添付しました");
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function removeMedia(index) {
-            appState.attachedMedia.splice(index, 1);
-            renderMediaPreviews();
-        }
-
-        function renderMediaPreviews() {
-            const container = document.getElementById('media-preview-bar');
-            if (!container) return;
-            if (appState.attachedMedia.length === 0) {
-                container.classList.add('hidden');
-                return;
-            }
-            container.classList.remove('hidden');
-            container.innerHTML = '';
-
-            appState.attachedMedia.forEach((m, idx) => {
-                const div = document.createElement('div');
-                div.className = "relative group shrink-0 rounded-lg overflow-hidden border border-slate-700 w-16 h-16 bg-slate-900 flex items-center justify-center";
-                if (m.type === 'image') {
-                    div.innerHTML = `
-                        <img src="${m.data}" class="w-full h-full object-cover">
-                        <button type="button" onclick="removeMedia(${idx})" class="absolute top-0 right-0 bg-slate-950/80 text-red-400 p-1 text-[10px] hover:bg-red-600 hover:text-white transition">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                    `;
-                } else if (m.type === 'video') {
-                    div.innerHTML = `
-                        <i class="fa-solid fa-video text-indigo-400 text-lg"></i>
-                        <button type="button" onclick="removeMedia(${idx})" class="absolute top-0 right-0 bg-slate-950/80 text-red-400 p-1 text-[10px] hover:bg-red-600 hover:text-white transition">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                    `;
-                } else {
-                    div.innerHTML = `
-                        <div class="text-[9px] p-1 text-indigo-300 truncate font-mono text-center">${escapeHTML(m.name || 'file')}</div>
-                        <button type="button" onclick="removeMedia(${idx})" class="absolute top-0 right-0 bg-slate-950/80 text-red-400 p-1 text-[10px] hover:bg-red-600 hover:text-white transition">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                    `;
+                if (files.length > 0) {
+                    processFiles(files);
                 }
-                container.appendChild(div);
             });
         }
 
-        function clearCurrentChat() {
-            const activeThread = getActiveThread();
-            if (activeThread) {
-                activeThread.messages = [];
-                saveThreadsToStorage();
-                renderActiveThreadMessages();
-                showToast("チャット履歴を消去しました");
-            }
-        }
+        function processFiles(files) {
+            files.forEach(file => {
+                const isImage = file.type.startsWith('image/');
+                const attachmentObj = {
+                    id: 'att_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+                    name: file.name,
+                    mimeType: file.type || (isImage ? 'image/png' : 'text/plain'),
+                    type: isImage ? 'image' : 'file',
+                    data: ''
+                };
 
-        // Full Multi-turn Gemini AI Handling
-        async function handleGenerate(event) {
-            if (event) event.preventDefault();
-            const userPrompt = promptInput.value.trim();
-            if (!userPrompt && appState.attachedMedia.length === 0) return;
-
-            const activeThread = getActiveThread();
-            if (!activeThread) return;
-
-            if (activeThread.messages.length === 0 && userPrompt) {
-                activeThread.title = userPrompt.length > 20 ? userPrompt.substring(0, 20) + '...' : userPrompt;
-                renderThreads();
-            }
-
-            document.getElementById('welcome-banner')?.classList.add('hidden');
-
-            const mediaCopy = [...appState.attachedMedia];
-            appendUserMessageUI(userPrompt, mediaCopy);
-            
-            // Push user message into conversation thread history
-            activeThread.messages.push({ role: 'user', text: userPrompt, media: mediaCopy });
-
-            promptInput.value = '';
-            promptCharCount.innerText = '0 文字';
-            appState.attachedMedia = [];
-            renderMediaPreviews();
-
-            const loadingId = appendLoadingIndicator();
-            scrollToBottom();
-
-            const isImageGenRequest = userPrompt.includes('画像生成') || userPrompt.includes('イラスト描いて') || userPrompt.includes('画像を生成して');
-
-            try {
-                if (isImageGenRequest && appState.apiKey) {
-                    await fetchGeminiImageGen(userPrompt, loadingId);
+                const reader = new FileReader();
+                if (isImage) {
+                    reader.onload = (event) => {
+                        attachmentObj.data = event.target.result; // Data URL
+                        state.pendingAttachments.push(attachmentObj);
+                        renderPendingAttachments();
+                    };
+                    reader.readAsDataURL(file);
                 } else {
-                    await fetchGeminiTextResponse(userPrompt, loadingId);
+                    reader.onload = (event) => {
+                        attachmentObj.data = event.target.result; // Text content
+                        state.pendingAttachments.push(attachmentObj);
+                        renderPendingAttachments();
+                    };
+                    reader.readAsText(file);
                 }
-            } catch (err) {
-                removeLoadingIndicator(loadingId);
-                generateMockResponse(userPrompt, isImageGenRequest);
-            }
-
-            saveThreadsToStorage();
+            });
         }
 
-        async function fetchGeminiTextResponse(userPrompt, loadingId) {
-            let apiKey = appState.apiKey ? appState.apiKey.trim() : '';
-            // Try newest models first
-            const models = ['gemini-3-flash-preview', 'gemini-2.5-flash', 'gemini-1.5-flash'];
-            const activeThread = getActiveThread();
+        function removePendingAttachment(id) {
+            state.pendingAttachments = state.pendingAttachments.filter(att => att.id !== id);
+            renderPendingAttachments();
+        }
 
-            const systemInstructionText = `あなたはGoogle Geminiのように賢くフレンドリーな万能AI「CodeCraft AI」です。
+        function renderPendingAttachments() {
+            const previewEl = document.getElementById('attachments-preview');
+            if (state.pendingAttachments.length === 0) {
+                previewEl.classList.add('hidden');
+                previewEl.innerHTML = '';
+                return;
+            }
 
-【会話ルール】
-1. 前後の文脈・過去の発言（作成したコードや質問）を完全に踏まえて応答してください。
-2. 「さっきの直して」「これどう思う？」といった指示にも直前の文脈から理解して回答してください。
-3. 雑談・計算・一般的な質問にはわかりやすいテキストで自然に答えてください。
-4. コード作成や修正が必要なときのみ、適切な解説と共にマークダウンのコードブロックで提供してください。`;
+            previewEl.classList.remove('hidden');
+            previewEl.innerHTML = '';
 
-            // Build full conversation contents payload for multi-turn context
-            const contents = [];
-            if (activeThread && activeThread.messages.length > 0) {
-                activeThread.messages.forEach(msg => {
-                    const role = msg.role === 'user' ? 'user' : 'model';
-                    const parts = [];
+            state.pendingAttachments.forEach(att => {
+                const chip = document.createElement('div');
+                chip.className = 'relative group flex items-center gap-2 bg-gray-200 dark:bg-gemini-darkHover border border-gray-300 dark:border-gray-600 rounded-xl px-2.5 py-1.5 text-xs text-gray-800 dark:text-gray-200 shadow-sm';
+                
+                if (att.type === 'image') {
+                    chip.innerHTML = `
+                        <img src="${att.data}" class="w-8 h-8 rounded object-cover" />
+                        <span class="truncate max-w-[120px] font-medium">${escapeHtml(att.name)}</span>
+                        <button onclick="removePendingAttachment('${att.id}')" class="ml-1 text-gray-400 hover:text-red-500 transition">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                        </button>
+                    `;
+                } else {
+                    chip.innerHTML = `
+                        <i class="fa-solid fa-file-code text-blue-500 text-sm"></i>
+                        <span class="truncate max-w-[140px] font-medium">${escapeHtml(att.name)}</span>
+                        <button onclick="removePendingAttachment('${att.id}')" class="ml-1 text-gray-400 hover:text-red-500 transition">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                        </button>
+                    `;
+                }
+                previewEl.appendChild(chip);
+            });
+        }
 
-                    if (msg.text) {
-                        parts.push({ text: msg.text });
-                    }
+        // --- RENDER CHAT MESSAGES ---
+        function renderActiveChat() {
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const messagesList = document.getElementById('messages-list');
+            const activeChat = state.chats.find(c => c.id === state.activeChatId);
 
-                    if (msg.media && msg.media.length > 0) {
-                        msg.media.forEach(m => {
-                            if (m.type === 'image' && m.data) {
-                                const base64Clean = m.data.includes(',') ? m.data.split(',')[1] : m.data;
-                                parts.push({
-                                    inlineData: {
-                                        mimeType: m.mimeType || 'image/png',
-                                        data: base64Clean
-                                    }
-                                });
-                            }
-                        });
-                    }
+            if (!activeChat || activeChat.messages.length === 0) {
+                welcomeScreen.classList.remove('hidden');
+                welcomeScreen.classList.add('flex');
+                messagesList.classList.add('hidden');
+                messagesList.innerHTML = '';
+                return;
+            }
 
-                    if (parts.length > 0) {
-                        contents.push({ role, parts });
+            welcomeScreen.classList.add('hidden');
+            welcomeScreen.classList.remove('flex');
+            messagesList.classList.remove('hidden');
+            messagesList.innerHTML = '';
+
+            activeChat.messages.forEach(msg => {
+                appendMessageToDom(msg);
+            });
+
+            scrollToBottom();
+        }
+
+        function appendMessageToDom(msg) {
+            const messagesList = document.getElementById('messages-list');
+            const isUser = msg.role === 'user';
+            
+            const messageWrapper = document.createElement('div');
+            messageWrapper.className = `flex gap-3 md:gap-4 ${isUser ? 'justify-end' : 'justify-start'}`;
+
+            let attachmentsHtml = '';
+            if (msg.attachments && msg.attachments.length > 0) {
+                attachmentsHtml = '<div class="flex flex-wrap gap-2 mb-2 justify-end">';
+                msg.attachments.forEach(att => {
+                    if (att.type === 'image') {
+                        attachmentsHtml += `
+                            <div class="relative rounded-xl overflow-hidden border border-blue-400/30 max-w-[200px] max-h-[150px]">
+                                <img src="${att.data}" class="w-full h-full object-cover" />
+                            </div>
+                        `;
+                    } else {
+                        attachmentsHtml += `
+                            <div class="flex items-center gap-1.5 px-3 py-1.5 bg-blue-700/40 border border-blue-400/40 rounded-xl text-xs text-white">
+                                <i class="fa-solid fa-file-lines text-blue-300"></i>
+                                <span class="font-medium truncate max-w-[150px]">${escapeHtml(att.name)}</span>
+                            </div>
+                        `;
                     }
                 });
-            } else {
-                contents.push({ role: 'user', parts: [{ text: userPrompt }] });
+                attachmentsHtml += '</div>';
             }
 
-            const payload = {
-                contents: contents,
-                systemInstruction: { parts: [{ text: systemInstructionText }] }
-            };
+            if (isUser) {
+                messageWrapper.innerHTML = `
+                    <div class="max-w-[85%] md:max-w-[75%]">
+                        ${attachmentsHtml}
+                        ${msg.content ? `
+                            <div class="bg-blue-600 text-white px-5 py-3.5 rounded-3xl rounded-tr-sm text-sm md:text-base shadow-sm leading-relaxed whitespace-pre-wrap">
+                                ${escapeHtml(msg.content)}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            } else {
+                const parsedContent = marked.parse(msg.content);
+                messageWrapper.innerHTML = `
+                    <div class="w-8 h-8 rounded-full gemini-gradient-bg flex items-center justify-center text-white shrink-0 shadow mt-1">
+                        <i class="fa-solid fa-sparkles text-xs"></i>
+                    </div>
+                    <div class="flex-1 max-w-[90%] space-y-2">
+                        <div class="prose dark:prose-invert text-gray-800 dark:text-gray-100 text-sm md:text-base">
+                            ${parsedContent}
+                        </div>
+                        <div class="flex items-center gap-2 pt-1 text-xs text-gray-400">
+                            <button onclick="copyToClipboard(\`${escapeHtml(msg.content).replace(/`/g, '\\`')}\`)" class="hover:text-gray-600 dark:hover:text-gray-200 flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gemini-darkHover transition">
+                                <i class="fa-regular fa-copy"></i> コピー
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
 
-            let success = false;
-            let aiText = "";
-
-            if (apiKey) {
-                for (const model of models) {
-                    try {
-                        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-                        const response = await fetch(apiUrl, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload)
-                        });
-
-                        if (response.ok) {
-                            const data = await response.json();
-                            if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
-                                aiText = data.candidates[0].content.parts[0].text;
-                                success = true;
-                                break;
-                            }
-                        }
-                    } catch (e) {
-                        console.warn(`Model ${model} request error:`, e);
-                    }
+            messagesList.appendChild(messageWrapper);
+            
+            // Add copy button to code blocks
+            messageWrapper.querySelectorAll('pre code').forEach((block) => {
+                const pre = block.parentElement;
+                if (!pre.querySelector('.code-copy-btn')) {
+                    const btn = document.createElement('button');
+                    btn.className = 'code-copy-btn absolute top-2 right-2 px-2.5 py-1 text-xs bg-gray-700/80 hover:bg-gray-600 text-gray-200 rounded-lg flex items-center gap-1 transition';
+                    btn.innerHTML = '<i class="fa-regular fa-copy"></i> コピー';
+                    btn.onclick = () => {
+                        copyToClipboard(block.innerText);
+                        btn.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> コピー完了';
+                        setTimeout(() => {
+                            btn.innerHTML = '<i class="fa-regular fa-copy"></i> コピー';
+                        }, 2000);
+                    };
+                    pre.appendChild(btn);
                 }
-            }
+            });
 
-            removeLoadingIndicator(loadingId);
+            scrollToBottom();
+        }
 
-            if (success && aiText) {
-                activeThread.messages.push({ role: 'ai', text: aiText });
-                renderAIFormattedMessage(aiText, true);
-            } else {
-                generateMockResponse(userPrompt, false);
+        function renderTypingIndicator() {
+            const messagesList = document.getElementById('messages-list');
+            const indicator = document.createElement('div');
+            indicator.id = 'typing-indicator';
+            indicator.className = 'flex gap-3 md:gap-4 justify-start items-center';
+            indicator.innerHTML = `
+                <div class="w-8 h-8 rounded-full gemini-gradient-bg flex items-center justify-center text-white shrink-0 shadow animate-pulse-glow">
+                    <i class="fa-solid fa-sparkles text-xs"></i>
+                </div>
+                <div class="flex items-center gap-1.5 px-4 py-3 rounded-2xl bg-gray-100 dark:bg-gemini-darkCard border border-gray-200 dark:border-gray-700/60">
+                    <div class="w-2 h-2 rounded-full bg-blue-500 animate-bounce"></div>
+                    <div class="w-2 h-2 rounded-full bg-purple-500 animate-bounce [animation-delay:0.2s]"></div>
+                    <div class="w-2 h-2 rounded-full bg-pink-500 animate-bounce [animation-delay:0.4s]"></div>
+                </div>
+            `;
+            messagesList.appendChild(indicator);
+            scrollToBottom();
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) indicator.remove();
+        }
+
+        function clearCurrentChatMessages() {
+            const activeChat = state.chats.find(c => c.id === state.activeChatId);
+            if (activeChat) {
+                activeChat.messages = [];
+                saveChatsToStorage();
+                renderActiveChat();
+                showToast('チャット履歴をクリアしました');
             }
         }
 
-        async function fetchGeminiImageGen(userPrompt, loadingId) {
-            const apiKey = appState.apiKey;
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${apiKey}`;
-            const activeThread = getActiveThread();
+        // --- SUBMIT MESSAGE & API CALL ---
+        async function submitMessage() {
+            if (state.isGenerating) return;
 
-            const payload = {
-                contents: [{ parts: [{ text: userPrompt }] }],
-                generationConfig: { responseModalities: ["TEXT", "IMAGE"] }
+            const inputEl = document.getElementById('user-input');
+            const content = inputEl.value.trim();
+            const currentAttachments = [...state.pendingAttachments];
+
+            if (!content && currentAttachments.length === 0) return;
+
+            const activeChat = state.chats.find(c => c.id === state.activeChatId);
+            if (!activeChat) return;
+
+            // Set dynamic title on first message
+            if (activeChat.messages.length === 0) {
+                let titleText = content || (currentAttachments[0] ? currentAttachments[0].name : '新しい会話');
+                activeChat.title = titleText.length > 20 ? titleText.substring(0, 20) + '...' : titleText;
+                renderSidebar();
+            }
+
+            // User Message Object
+            const userMsg = {
+                id: 'msg_' + Date.now(),
+                role: 'user',
+                content: content,
+                attachments: currentAttachments,
+                timestamp: new Date().toISOString()
             };
 
-            const response = await fetch(apiUrl, {
+            activeChat.messages.push(userMsg);
+            saveChatsToStorage();
+
+            // Clear input and attachments UI
+            inputEl.value = '';
+            state.pendingAttachments = [];
+            renderPendingAttachments();
+            autoResizeTextarea(inputEl);
+
+            renderActiveChat();
+            state.isGenerating = true;
+            document.getElementById('send-btn').disabled = true;
+
+            renderTypingIndicator();
+
+            try {
+                let aiResponseContent = '';
+                if (!state.settings.apiKey.trim()) {
+                    // Context-aware Demo Mode simulation
+                    aiResponseContent = await simulateDemoResponse(content, activeChat.messages, currentAttachments);
+                } else {
+                    // Full Multimodal Context-Aware Gemini REST API Call
+                    aiResponseContent = await fetchGeminiAPI(activeChat.messages);
+                }
+
+                removeTypingIndicator();
+
+                const aiMsg = {
+                    id: 'msg_' + Date.now(),
+                    role: 'model',
+                    content: aiResponseContent,
+                    timestamp: new Date().toISOString()
+                };
+
+                activeChat.messages.push(aiMsg);
+                saveChatsToStorage();
+                appendMessageToDom(aiMsg);
+
+            } catch (err) {
+                removeTypingIndicator();
+                console.error(err);
+                const errorMsg = {
+                    id: 'msg_' + Date.now(),
+                    role: 'model',
+                    content: `⚠️ **エラーが発生しました**\n\n${err.message || 'Gemini APIへのリクエストに失敗しました。APIキーまたはネットワーク接続をご確認ください。'}`
+                };
+                activeChat.messages.push(errorMsg);
+                saveChatsToStorage();
+                appendMessageToDom(errorMsg);
+            } finally {
+                state.isGenerating = false;
+                document.getElementById('send-btn').disabled = false;
+            }
+        }
+
+        // --- GEMINI REST API INTEGRATION (MULTIMODAL & MULTI-TURN CONTEXT) ---
+        async function fetchGeminiAPI(allMessages) {
+            const apiKey = state.settings.apiKey.trim();
+            const model = state.settings.model || 'gemini-2.5-flash';
+            
+            // Build contents array with full history and attached files/images
+            const contents = allMessages.map(m => {
+                const parts = [];
+
+                // Add attachments to parts if present
+                if (m.attachments && m.attachments.length > 0) {
+                    m.attachments.forEach(att => {
+                        if (att.type === 'image') {
+                            // Extract Base64 string without data URL prefix
+                            const base64Data = att.data.includes(',') ? att.data.split(',')[1] : att.data;
+                            parts.push({
+                                inlineData: {
+                                    mimeType: att.mimeType || 'image/png',
+                                    data: base64Data
+                                }
+                            });
+                        } else if (att.type === 'file') {
+                            parts.push({
+                                text: `[添付ファイル: ${att.name}]\n\`\`\`\n${att.data}\n\`\`\``
+                            });
+                        }
+                    });
+                }
+
+                // Add main text content
+                if (m.content) {
+                    parts.push({ text: m.content });
+                }
+
+                return {
+                    role: m.role === 'user' ? 'user' : 'model',
+                    parts: parts.length > 0 ? parts : [{ text: '' }]
+                };
+            });
+
+            const payload = { contents };
+
+            // System Instruction configuration
+            const sysInstructionText = state.settings.systemInstruction.trim() || DEFAULT_SYSTEM_INSTRUCTION;
+            payload.systemInstruction = {
+                parts: [{ text: sysInstructionText }]
+            };
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
 
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData.error?.message || `HTTP エラー ${response.status}: ${response.statusText}`);
+            }
+
             const data = await response.json();
-            removeLoadingIndicator(loadingId);
+            const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
-            const candidate = data.candidates?.[0];
-            const imgPart = candidate?.content?.parts?.find(p => p.inlineData);
-            const textPart = candidate?.content?.parts?.find(p => p.text);
+            if (!textResponse) {
+                throw new Error('APIから有効な回答を受け取れませんでした。');
+            }
 
-            let textOutput = textPart ? textPart.text : "ご指定の画像を生成しました！";
+            return textResponse;
+        }
 
-            if (imgPart && imgPart.inlineData) {
-                const mime = imgPart.inlineData.mimeType || "image/png";
-                const base64Img = `data:${mime};base64,${imgPart.inlineData.data}`;
-                activeThread.messages.push({ role: 'ai', text: `${textOutput}\n\n![Generated Image](${base64Img})` });
-                renderAIFormattedMessage(`${textOutput}\n\n![Generated Image](${base64Img})`, true);
-            } else {
-                activeThread.messages.push({ role: 'ai', text: textOutput });
-                renderAIFormattedMessage(textOutput, true);
+        // --- DEMO MODE WITH CONTEXT AWARENESS SIMULATION ---
+        async function simulateDemoResponse(userInput, historyMessages, attachments) {
+            await new Promise(resolve => setTimeout(resolve, 1300));
+
+            const lower = userInput.toLowerCase();
+            const historyCount = historyMessages.length;
+
+            // Image attachment demo response
+            if (attachments && attachments.some(a => a.type === 'image')) {
+                const imgAtt = attachments.find(a => a.type === 'image');
+                return `**【デモモード：画像認識】**\n\n添付された画像「**${escapeHtml(imgAtt.name)}**」を受信・読み込みました！\n\n- **画像プレビュー**: 正常に検出されました。\n- **解析結果**: APIキーを設定すると、Google Gemini 2.5の画像認識モデルが画像内のオブジェクト、テキスト、デザインレイアウトを正確に説明・コード化します。`;
+            }
+
+            // File attachment demo response
+            if (attachments && attachments.some(a => a.type === 'file')) {
+                const fileAtt = attachments.find(a => a.type === 'file');
+                return `**【デモモード：ファイル解析】**\n\nファイル「**${escapeHtml(fileAtt.name)}**」のテキスト内容（${fileAtt.data.length}文字）を全文読み込みました！\n\n\`\`\`\n${escapeHtml(fileAtt.data.substring(0, 150))}${fileAtt.data.length > 150 ? '...' : ''}\n\`\`\`\n\nAPIキーを設定することで、ファイル全体に対する質問、修正、要約などが可能になります。`;
+            }
+
+            // Contextual Follow-up Detection ("ここを直して", "色を変えて" etc.)
+            const isFollowUpRequest = lower.includes('直して') || lower.includes('修正') || lower.includes('変更') || lower.includes('変えて') || lower.includes('改善');
+            
+            if (isFollowUpRequest && historyCount > 2) {
+                return `**【デモモード：会話コンテキスト認識】**\n\nご指示ありがとうございます！直前の会話・コードを修正しました：\n\n\`\`\`python\n# [修正版] ご要望に応じてアップデートしたコード\ndef updated_demo_function():\n    print("文脈を保持して「${escapeHtml(userInput)}」の修正を行いました！")\n    # APIキー設定時は、過去すべてのコード・対話文脈から正確に修正部分を特定して差分出力します\n    return True\n\`\`\`\n\n※ APIキーを設定いただくと、Gemini APIが過去の会話全体を保持したまま「ここを直して」等の抽象的なリクエストに正確に応答します。`;
+            }
+
+            if (lower.includes('コード') || lower.includes('python') || lower.includes('html')) {
+                return `**【デモモード応答】**\n\n以下はご要望のコードのサンプルです：\n\n\`\`\`javascript\n// Gemini AI Assistant Context Demo\nfunction handleUserRequest(input, history) {\n    console.log("文脈数:", history.length);\n    return "文脈をしっかり考慮して回答を生成中...";\n}\n\`\`\`\n\n次に「**ここを直して**」や「**Pythonに書き換えて**」とメッセージを送ると、AIが文脈を把握して修正します！`;
+            }
+
+            return `**【デモモードの応答】**\n\n「**${escapeHtml(userInput)}**」について承りました。（会話ターン数: ${Math.floor(historyCount / 2)}回目）\n\n現在デモモードで動作中です。APIキーを設定していただくと、Geminiが会話履歴全体や添付ファイルを理解し、かみ合った自然なやり取りを提供します。`;
+        }
+
+        // --- UTILITIES ---
+        function handleKeyDown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                submitMessage();
             }
         }
 
-        function generateMockResponse(promptText, isImageGen) {
-            const activeThread = getActiveThread();
-            let aiText = "";
-
-            if (isImageGen) {
-                const sampleSvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="100%" height="100%" fill="%231e1b4b"/><circle cx="200" cy="150" r="80" fill="%236366f1"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="white" font-family="sans-serif" font-size="20">AI Preview</text></svg>`;
-                aiText = `「${promptText}」のサンプル画像を生成しました！\nAPIキーを設定するとGemini 3.1 Flash Imageで本格的な画像が生成できます。\n\n![Generated Image](${sampleSvg})`;
-            } else if (promptText.includes('1+1') || promptText.includes('1 + 1')) {
-                aiText = "1 + 1 は 2 です！他に気になる計算や質問があれば何でも言ってくださいね。";
-            } else if (promptText.includes('直して') || promptText.includes('修正')) {
-                aiText = `直前の会話の内容を踏まえて修正しました！\n\n\`\`\`javascript\n// 修正後のコード\nfunction updateUI() {\n    console.log("さっきの文脈を踏まえて修正を適用しました！");\n}\n\`\`\`\n\n他に変更したい部分があれば気軽に教えてください。`;
-            } else if (promptText.includes('コード') || promptText.includes('作って')) {
-                aiText = `「${promptText}」に対応するコードを作成しました！\n\n\`\`\`html\n<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { background: #0f172a; color: white; display: flex; justify-content: center; font-family: sans-serif; padding: 40px; }\n    .btn { background: #6366f1; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; }\n  </style>\n</head>\n<body>\n  <button class="btn" onclick="alert('クリックされました！')">サンプルボタン</button>\n</body>\n</html>\n\`\`\`\n\n「Playgroundで開く」を押すとプレビュー表示できます！`;
-            } else {
-                aiText = `「${promptText}」ですね！日常会話からプログラミング、画像の生成まで文脈に合わせてお答えします。`;
-            }
-
-            activeThread.messages.push({ role: 'ai', text: aiText });
-            renderAIFormattedMessage(aiText, true);
+        function autoResizeTextarea(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 180) + 'px';
         }
 
-        // Render Helpers
-        function appendUserMessageUI(text, media = []) {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = "flex items-start justify-end gap-3 max-w-4xl mx-auto my-4";
+        function usePromptTemplate(text) {
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const messagesList = document.getElementById('messages-list');
+            welcomeScreen.classList.add('hidden');
+            welcomeScreen.classList.remove('flex');
+            messagesList.classList.remove('hidden');
 
-            let mediaHTML = "";
-            if (media && media.length > 0) {
-                mediaHTML += `<div class="flex flex-wrap gap-2 mb-2">`;
-                media.forEach(m => {
-                    if (m.type === 'image') {
-                        mediaHTML += `<img src="${m.data}" class="max-w-xs max-h-48 rounded-lg border border-slate-700 object-cover">`;
-                    } else if (m.type === 'video') {
-                        mediaHTML += `<video src="${m.data}" controls class="max-w-xs max-h-48 rounded-lg border border-slate-700"></video>`;
-                    } else {
-                        mediaHTML += `<div class="px-3 py-1.5 bg-slate-800 rounded-lg text-xs font-mono text-indigo-300 border border-slate-700 flex items-center gap-1.5"><i class="fa-solid fa-file text-xs"></i> ${escapeHTML(m.name || 'File')}</div>`;
-                    }
-                });
-                mediaHTML += `</div>`;
-            }
-
-            msgDiv.innerHTML = `
-                <div class="bg-indigo-600/90 border border-indigo-500/40 text-white p-4 rounded-2xl rounded-tr-none max-w-2xl shadow-md text-sm leading-relaxed">
-                    ${mediaHTML}
-                    <div class="whitespace-pre-wrap">${escapeHTML(text)}</div>
-                </div>
-            `;
-            chatMessages.appendChild(msgDiv);
-        }
-
-        function renderAIFormattedMessage(text, animate = false) {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = "flex items-start gap-3 max-w-4xl mx-auto my-4";
-
-            const codeBlockRegex = /```(\w*)\n([\s\S]*?)```/g;
-            let formattedHTML = "";
-            let lastIndex = 0;
-            let match;
-
-            while ((match = codeBlockRegex.exec(text)) !== null) {
-                const textBefore = text.substring(lastIndex, match.index);
-                if (textBefore) {
-                    formattedHTML += `<div class="whitespace-pre-wrap mb-3 leading-relaxed">${formatMarkdownText(textBefore)}</div>`;
-                }
-
-                const lang = match[1] || 'javascript';
-                const code = match[2];
-                const codeId = 'code_' + Math.random().toString(36).substring(2, 9);
-                const prismClass = getPrismClass(lang);
-
-                formattedHTML += `
-                    <div class="my-4 rounded-xl overflow-hidden border border-slate-800 bg-[#0d1117] shadow-xl">
-                        <div class="bg-slate-900/90 px-4 py-2 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400">
-                            <span class="font-mono font-medium text-indigo-400 flex items-center gap-1.5">
-                                <i class="fa-solid fa-code text-[11px]"></i> ${escapeHTML(lang.toUpperCase())}
-                            </span>
-                            <div class="flex items-center gap-2">
-                                <button onclick="sendToSandbox('${codeId}')" class="px-2.5 py-1 bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 border border-indigo-500/40 rounded-lg font-medium transition flex items-center gap-1 cursor-pointer">
-                                    <i class="fa-solid fa-play text-[10px]"></i> Playgroundで開く
-                                </button>
-                                <button onclick="copyCodeToClipboard('${codeId}')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg font-medium transition flex items-center gap-1 cursor-pointer">
-                                    <i class="fa-solid fa-copy text-[10px]"></i> コピー
-                                </button>
-                            </div>
-                        </div>
-                        <div class="p-4 overflow-x-auto code-font text-xs leading-relaxed">
-                            <pre class="!bg-transparent !m-0 !p-0"><code id="${codeId}" class="language-${prismClass}">${escapeHTML(code)}</code></pre>
-                        </div>
-                    </div>
-                `;
-
-                lastIndex = codeBlockRegex.lastIndex;
-            }
-
-            const remainingText = text.substring(lastIndex);
-            if (remainingText) {
-                formattedHTML += `<div class="whitespace-pre-wrap leading-relaxed">${formatMarkdownText(remainingText)}</div>`;
-            }
-
-            msgDiv.innerHTML = `
-                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold shrink-0 shadow-md">
-                    <i class="fa-solid fa-robot"></i>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 text-slate-100 p-4 rounded-2xl rounded-tl-none max-w-3xl shadow-md text-sm leading-relaxed w-full">
-                    ${formattedHTML}
-                </div>
-            `;
-
-            chatMessages.appendChild(msgDiv);
-            Prism.highlightAllUnder(msgDiv);
-            scrollToBottom();
-        }
-
-        function formatMarkdownText(text) {
-            let escaped = escapeHTML(text);
-
-            escaped = escaped.replace(/!\[(.*?)\]\((.*?)\)/g, (m, alt, url) => {
-                return `
-                    <div class="my-3 relative group max-w-md rounded-2xl overflow-hidden border border-slate-700 shadow-xl bg-slate-950">
-                        <img src="${url}" class="w-full h-auto object-cover" alt="${alt}">
-                        <div class="p-2 bg-slate-900 border-t border-slate-800 flex justify-end">
-                            <a href="${url}" download="ai-generated-image.png" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-medium flex items-center gap-1.5 transition">
-                                <i class="fa-solid fa-download"></i> ダウンロード
-                            </a>
-                        </div>
-                    </div>
-                `;
-            });
-
-            escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-white">$1</strong>');
-            escaped = escaped.replace(/`([^`]+)`/g, '<code class="bg-slate-800 text-indigo-300 px-1.5 py-0.5 rounded font-mono text-xs">$1</code>');
-            return escaped;
-        }
-
-        function appendLoadingIndicator() {
-            const id = 'loading_' + Date.now();
-            const msgDiv = document.createElement('div');
-            msgDiv.id = id;
-            msgDiv.className = "flex items-center gap-3 max-w-4xl mx-auto my-4";
-            msgDiv.innerHTML = `
-                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold shrink-0 shadow-md">
-                    <i class="fa-solid fa-robot animate-spin"></i>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 text-slate-400 p-4 rounded-2xl rounded-tl-none shadow-md flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-indigo-500 typing-dot"></span>
-                    <span class="w-2 h-2 rounded-full bg-indigo-500 typing-dot"></span>
-                    <span class="w-2 h-2 rounded-full bg-indigo-500 typing-dot"></span>
-                    <span class="text-xs ml-2">回答中...</span>
-                </div>
-            `;
-            chatMessages.appendChild(msgDiv);
-            return id;
-        }
-
-        function removeLoadingIndicator(id) {
-            document.getElementById(id)?.remove();
-        }
-
-        // Sandbox Methods
-        function sendToSandbox(codeId) {
-            const codeEl = document.getElementById(codeId);
-            if (!codeEl || !sandboxEditor) return;
-            sandboxEditor.value = codeEl.innerText;
-            switchView('sandbox');
-            runSandboxCode();
-            showToast("Playgroundへ送りました");
-        }
-
-        function copyCodeToClipboard(codeId) {
-            const codeEl = document.getElementById(codeId);
-            if (!codeEl) return;
-            const text = codeEl.innerText;
-            const area = document.createElement('textarea');
-            area.value = text;
-            document.body.appendChild(area);
-            area.select();
-            document.execCommand('copy');
-            document.body.removeChild(area);
-            showToast("コードをコピーしました");
-        }
-
-        function runSandboxCode() {
-            const code = sandboxEditor.value;
-            const iframe = document.getElementById('sandbox-iframe');
-            if (iframe) {
-                const doc = iframe.contentDocument || iframe.contentWindow.document;
-                doc.open();
-                doc.write(code);
-                doc.close();
-            }
-        }
-
-        function resetSandbox() {
-            if (sandboxEditor) sandboxEditor.value = '';
-            runSandboxCode();
-            showToast("Playgroundをリセットしました");
-        }
-
-        function saveThreadsToStorage() {
-            try {
-                localStorage.setItem('codecraft_threads', JSON.stringify(appState.threads));
-            } catch (e) {}
-        }
-
-        function loadThreadsFromStorage() {
-            try {
-                const saved = localStorage.getItem('codecraft_threads');
-                if (saved) appState.threads = JSON.parse(saved);
-            } catch (e) {
-                appState.threads = [];
-            }
+            const inputEl = document.getElementById('user-input');
+            inputEl.value = text;
+            autoResizeTextarea(inputEl);
+            submitMessage();
         }
 
         function scrollToBottom() {
-            if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+            const container = document.getElementById('chat-container');
+            setTimeout(() => {
+                container.scrollTop = container.scrollHeight;
+            }, 50);
         }
 
-        function escapeHTML(str) {
-            if (!str) return '';
-            return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+        function openSettingsModal() {
+            document.getElementById('settings-modal').classList.remove('hidden');
         }
 
-        function getPrismClass(lang) {
-            const map = { 'js': 'javascript', 'html': 'markup', 'css': 'css', 'python': 'python', 'py': 'python', 'cpp': 'cpp', 'c++': 'cpp', 'sql': 'sql', 'jsx': 'jsx' };
-            return map[lang.toLowerCase()] || 'javascript';
+        function closeSettingsModal() {
+            document.getElementById('settings-modal').classList.add('hidden');
         }
 
-        function showToast(msg) {
+        function saveSettings() {
+            state.settings.apiKey = document.getElementById('api-key-input').value.trim();
+            state.settings.model = document.getElementById('model-select').value;
+            state.settings.systemInstruction = document.getElementById('system-instruction-input').value.trim() || DEFAULT_SYSTEM_INSTRUCTION;
+
+            saveSettingsToStorage();
+            closeSettingsModal();
+            showToast('設定を保存しました');
+        }
+
+        function updateApiStatusBadge() {
+            const badge = document.getElementById('api-status-badge');
+            const demoIndicator = document.getElementById('demo-mode-indicator');
+            if (state.settings.apiKey.trim()) {
+                badge.textContent = 'API連携中';
+                badge.className = 'text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-500 dark:text-emerald-400 border border-emerald-500/30';
+                if (demoIndicator) demoIndicator.classList.add('hidden');
+            } else {
+                badge.textContent = 'デモ';
+                badge.className = 'text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-500 dark:text-amber-400 border border-amber-500/30';
+                if (demoIndicator) demoIndicator.classList.remove('hidden');
+            }
+        }
+
+        function updateHeaderBadge() {
+            const modelBadge = document.getElementById('header-model-badge');
+            modelBadge.textContent = state.settings.model || 'gemini-2.5-flash';
+        }
+
+        function toggleApiKeyVisibility() {
+            const input = document.getElementById('api-key-input');
+            const icon = document.getElementById('eye-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fa-solid fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fa-solid fa-eye';
+            }
+        }
+
+        function copyToClipboard(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text);
+            } else {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            }
+            showToast('クリップボードにコピーしました');
+        }
+
+        function showToast(message) {
             const toast = document.getElementById('toast');
             const toastMsg = document.getElementById('toast-message');
-            if (!toast || !toastMsg) return;
-            toastMsg.innerText = msg;
-            toast.classList.remove('translate-y-20', 'opacity-0');
+            toastMsg.textContent = message;
+
+            toast.classList.remove('translate-y-[-100px]', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
             setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-[-100px]', 'opacity-0');
+            }, 2500);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
         }
     </script>
 </body>
